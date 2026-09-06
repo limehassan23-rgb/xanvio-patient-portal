@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Lab Appointment - Xanvio Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
+        .navbar { background-color: #0d6efd; color: white; font-weight: bold; }
+        .booking-card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); background: white; }
+        .btn-submit { background-color: #0d6efd; color: white; font-weight: 500; border-radius: 6px; }
+        .btn-submit:hover { background-color: #0b5ed7; color: white; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark mb-5 p-3">
+        <div class="container">
+            <span class="navbar-brand h1 mb-0">🔬 Xanvio Lab Systems</span>
+            <div class="navbar-nav">
+                <a class="nav-link text-white me-3" href="{% url 'search_page' %}">🔍 Search Portal</a>
+                <a class="nav-link text-white active fw-bold" href="{% url 'book_appointment' %}">📅 Book Appointment</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <div class="booking-card p-5">
+                    <h3 class="text-center mb-2 text-dark fw-bold">Schedule a Lab Test</h3>
+                    <p class="text-muted text-center mb-4">Provide patient matching info and select an appointment window.</p>
+
+                    {% if success_message %}
+                        <div class="alert alert-success text-center mb-4" role="alert">
+                            ✨ {{ success_message }}
+                        </div>
+                    {% endif %}
+
+                    {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row bg-light p-3 rounded mb-4 mx-0 border">
+                            <h6 class="text-secondary fw-bold mb-3 px-0">1. Verify Patient Record</h6>
+                            <div class="col-md-6 mb-3 px-1">
+                                <label class="form-label font-monospace small text-uppercase">Patient Full Name</label>
+                                <input type="text" name="patient_name" class="form-control" placeholder="e.g. John Doe" required>
+                            </div>
+                            <div class="col-md-6 mb-3 px-1">
+                                <label class="form-label font-monospace small text-uppercase">Patient Date of Birth</label>
+                                <input type="date" name="patient_dob" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <h6 class="text-secondary fw-bold mb-3">2. Select Lab Panels & Timings</h6>
+                        <div class="mb-4">
+                            <label class="form-label">Available Lab Service Panel</label>
+                            {{ form.service }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Requested Date & Arrival Time</label>
+                            {{ form.date }}
+                        </div>
+
+                        <button type="submit" class="btn btn-submit w-100 p-2.5 fs-5">Confirm Appointment Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
